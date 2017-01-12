@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PCGuardWinForm", "PCGuardWinForm\PCGuardWinForm.csproj", "{4EE85D43-A5DC-4BA6-892E-0730E16DDBE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchdogLib", "WatchdogLib\WatchdogLib.csproj", "{4BC93E50-963A-4471-922F-801810B9EFC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchDog", "WatchDog\WatchDog.csproj", "{FFDC0B09-1BC3-4C8E-9EFA-98A651428FD5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PCGuardWebAPI", "PCGuardWebAPI\PCGuardWebAPI.csproj", "{DAE53529-0852-4A15-8C71-DF7A22C1860C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PCGuardWebLib", "PCGuardWebLib\PCGuardWebLib.csproj", "{8A167848-03BB-43FA-82F2-20F53CD57EA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PCGuardDB", "PCGuardDB\PCGuardDB.csproj", "{C9FA3C32-3897-4633-8A06-F4A35CA98BD8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4EE85D43-A5DC-4BA6-892E-0730E16DDBE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EE85D43-A5DC-4BA6-892E-0730E16DDBE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EE85D43-A5DC-4BA6-892E-0730E16DDBE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EE85D43-A5DC-4BA6-892E-0730E16DDBE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BC93E50-963A-4471-922F-801810B9EFC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BC93E50-963A-4471-922F-801810B9EFC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BC93E50-963A-4471-922F-801810B9EFC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BC93E50-963A-4471-922F-801810B9EFC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFDC0B09-1BC3-4C8E-9EFA-98A651428FD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFDC0B09-1BC3-4C8E-9EFA-98A651428FD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFDC0B09-1BC3-4C8E-9EFA-98A651428FD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFDC0B09-1BC3-4C8E-9EFA-98A651428FD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAE53529-0852-4A15-8C71-DF7A22C1860C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAE53529-0852-4A15-8C71-DF7A22C1860C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAE53529-0852-4A15-8C71-DF7A22C1860C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAE53529-0852-4A15-8C71-DF7A22C1860C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A167848-03BB-43FA-82F2-20F53CD57EA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A167848-03BB-43FA-82F2-20F53CD57EA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A167848-03BB-43FA-82F2-20F53CD57EA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A167848-03BB-43FA-82F2-20F53CD57EA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9FA3C32-3897-4633-8A06-F4A35CA98BD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9FA3C32-3897-4633-8A06-F4A35CA98BD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9FA3C32-3897-4633-8A06-F4A35CA98BD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9FA3C32-3897-4633-8A06-F4A35CA98BD8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

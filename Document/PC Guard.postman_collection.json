@@ -1,0 +1,103 @@
+{
+	"variables": [],
+	"info": {
+		"name": "PC Guard",
+		"_postman_id": "fb786c46-3994-b595-1af4-c23efb52d486",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Local",
+			"description": "",
+			"item": [
+				{
+					"name": "HistoryService.Add",
+					"request": {
+						"url": "http://localhost:54443/api/PCGuardWebLib/PCGuardWebLib/HistoryService/Add",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{url:'http://msdn.microsoft.com/query/dev12.query?appId=Dev12IDEF1&l=ZH-TW&k=k(EHInvalidOperation.WinForms.IllegalCrossThreadCall);k(TargetFrameworkMoniker-.NETFramework,Version%3Dv4.0);k(DevLang-csharp)&rd=true', title:'HOW TO：進行對 Windows Form 控制項的安全執行緒呼叫1', browser_type:'CHROME', last_visit_time:'13128169342116772', emp_no:'T1863', dept_no:'T1210'}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "HistoryService.Test",
+					"request": {
+						"url": "http://localhost:54443/api/PCGuardWebLib/PCGuardWebLib/HistoryService/Test",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Test",
+			"description": "",
+			"item": [
+				{
+					"name": "HistoryService.Add",
+					"request": {
+						"url": "http://192.168.100.85:8090/api/PCGuardWebLib/PCGuardWebLib/HistoryService/Add",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{url:'http://msdn.microsoft.com/query/dev12.query?appId=Dev12IDEF1&l=ZH-TW&k=k(EHInvalidOperation.WinForms.IllegalCrossThreadCall);k(TargetFrameworkMoniker-.NETFramework,Version%3Dv4.0);k(DevLang-csharp)&rd=true', title:'HOW TO：進行對 Windows Form 控制項的安全執行緒呼叫2', browser_type:'CHROME', last_visit_time:'13128169342116772', emp_no:'T1863', dept_no:'T1210'}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "HistoryService.Test",
+					"request": {
+						"url": "http://192.168.100.85:8090/api/PCGuardWebLib/PCGuardWebLib/HistoryService/Test",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
