@@ -37,13 +37,21 @@ namespace PCGuardWinForm
         private object _getLocker = new object(); //抓取browser history的鎖
         private object _publishLocker = new object(); //抓取發佈到遠端的鎖
 
+        private Person _person; //個人AD資訊
+        private HistoryExporter _export; //暫存資料輸出器
+
         delegate void SetTextCallback(string text);
 
       
         public MainForm()
         {
             InitializeComponent();
-            
+
+            if (_person == null)
+                _person = new Person();
+            if (_export == null)
+                _export = new HistoryExporter();
+
             if (IS_ENABLED_WATCHDOG)
             {
                 int watchDogMonitorInterval = 5000;
@@ -71,7 +79,6 @@ namespace PCGuardWinForm
         /// <param name="e"></param>
         private void Form1_Load(object sender, EventArgs e)
         {
-
             MaximizeBox = false;
 
             Initial(); //初始化UI
@@ -91,7 +98,6 @@ namespace PCGuardWinForm
             }
             else if (FormWindowState.Normal == this.WindowState)
             {
-                //Normal();
                 Minimized();
             }
         }
@@ -208,11 +214,11 @@ namespace PCGuardWinForm
                 SetText("Current SSID is " + ssid);
 
                 //Show alert ex: 非gseo_members無網連接時警示非法
-                bool IsWifiConnected = !"NONE".Equals(ssid);
-                bool IsValid = _validSSID.Equals(ssid);
+                bool IsWifiConnected = !"NONE".Equals(ssid); //有wifi連線?
+                bool IsValid = _validSSID.Equals(ssid); //wifi ssid合法?
                 if (IsWifiConnected && !IsValid)
                 {
-                    ShowMsg("您正使用的是非gseo_members的非法連線");
+                    ShowMsg("Sniffing your Wifi network is illegal! Please switch your Wifi to \"gseo_members\".");
                 }
 
                 Thread.Sleep(10000);
@@ -226,13 +232,11 @@ namespace PCGuardWinForm
         {
             IBrowser browser = new InternetExplorer();
             LocalDB localdb = new LocalDB("ie");
-            HistoryExporter export = new HistoryExporter();
-            Person person = new Person();
 
             while (true)
             {
                 CatchBrowserHistory(browser, localdb);
-                PublishToCentral(export, localdb, person);
+                PublishToCentral(localdb);
 
                 Thread.Sleep(15000);
             }
@@ -245,13 +249,11 @@ namespace PCGuardWinForm
         {
             IBrowser browser = new Chrome();
             LocalDB localdb = new LocalDB("chrome");
-            HistoryExporter export = new HistoryExporter();
-            Person person = new Person();
 
             while (true)
             {
                 CatchBrowserHistory(browser, localdb);
-                PublishToCentral(export, localdb, person);
+                PublishToCentral(localdb);
 
                 Thread.Sleep(15000);
             }
@@ -264,13 +266,11 @@ namespace PCGuardWinForm
         {
             IBrowser browser = new Firefox();
             LocalDB localdb = new LocalDB("firefox");
-            HistoryExporter export = new HistoryExporter();
-            Person person = new Person();
 
             while (true)
             {
                 CatchBrowserHistory(browser, localdb);
-                PublishToCentral(export, localdb, person);
+                PublishToCentral(localdb);
 
                 Thread.Sleep(15000);
             }
@@ -300,14 +300,12 @@ namespace PCGuardWinForm
         /// Local DB資料發佈到遠端儲存下來
         /// 一次抓100筆本地資料，拋送遠端記錄下來，最後將此100筆從本地刪除
         /// </summary>
-        /// <param name="export">匯出資料物件</param>
         /// <param name="localdb">本地資料庫</param>
-        /// <param name="person">個人物件</param>
-        private void PublishToCentral(HistoryExporter export, LocalDB localdb, Person person)
+        private void PublishToCentral(LocalDB localdb)
         {
             lock (_publishLocker)
             {
-                if (export.IsAvailable())
+                if (_export.IsAvailable())
                 {
                     List<URL> dbList = localdb.GetHistorys();
                     long maxNum = 0;
@@ -315,7 +313,7 @@ namespace PCGuardWinForm
                     {
                         foreach (URL uu in dbList)
                         {
-                            export.Export(uu, person.GetADAccount(), person.GetDepartment());
+                            _export.Export(uu, _person.GetADAccount(), _person.GetDepartment());
                             if (uu.Num > maxNum)
                                 maxNum = uu.Num;
                         }

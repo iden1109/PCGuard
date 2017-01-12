@@ -111,6 +111,10 @@ namespace com.gseo.persistent.remote
             {
                 Debug.WriteLine(ex.ToString());
             }
+            catch (AggregateException ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
             return null;
         }
     }

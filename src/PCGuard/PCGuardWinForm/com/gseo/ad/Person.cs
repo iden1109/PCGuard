@@ -18,11 +18,7 @@ namespace com.gseo.ad
 
         public Person()
         {
-            if (_userPrincipal == null)
-            {
-                PrincipalContext domain = new PrincipalContext(ContextType.Domain);
-                _userPrincipal = UserPrincipal.FindByIdentity(domain, GetADAccount());
-            }
+            ImplementUserPrincipal();
         }
 
         /// <summary>
@@ -110,6 +106,8 @@ namespace com.gseo.ad
             Property:	nTSecurityDescriptor 	System.__ComObject
              */
             DirectoryEntry directoryEntry = GetDirectoryEntry();
+            if (directoryEntry == null)
+                return;
 
             foreach (string key in directoryEntry.Properties.PropertyNames)
             {
@@ -128,6 +126,8 @@ namespace com.gseo.ad
         private String GetProperty(String property)
         {
             DirectoryEntry directoryEntry = GetDirectoryEntry();
+            if (directoryEntry == null)
+                return "";
 
             if (directoryEntry.Properties.Contains(property))
                 return directoryEntry.Properties[property].Value.ToString();
@@ -135,10 +135,39 @@ namespace com.gseo.ad
                 return String.Empty;
         }
 
+        /// <summary>
+        /// 取得Directory Entry
+        /// </summary>
+        /// <returns>DirectoryEntry</returns>
         private DirectoryEntry GetDirectoryEntry()
         {
+            if (_userPrincipal == null)
+            {
+                ImplementUserPrincipal();
+                return null;
+            }
+                
             DirectoryEntry directoryEntry = _userPrincipal.GetUnderlyingObject() as DirectoryEntry;
             return directoryEntry;
+        }
+
+        /// <summary>
+        /// 實作UserPrincipal
+        /// </summary>
+        private void ImplementUserPrincipal()
+        {
+            try
+            {
+                if (_userPrincipal == null)
+                {
+                    PrincipalContext domain = new PrincipalContext(ContextType.Domain);
+                    _userPrincipal = UserPrincipal.FindByIdentity(domain, GetADAccount());
+                }
+            }
+            catch (PrincipalServerDownException ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
     }
 }

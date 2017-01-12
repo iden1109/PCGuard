@@ -27,7 +27,7 @@ namespace com.gseo.browser
         }
 
         /// <summary>
-        /// 抓歷史記錄
+        /// 抓1小時內的歷史記錄
         /// </summary>
         /// <returns>URL集合</returns>
         public IEnumerable<URL> GetHistory()
@@ -42,10 +42,10 @@ namespace com.gseo.browser
                 if(connection.State != ConnectionState.Open)
                     connection.Open();
 
-                long lastMonth = DateTime.Now.AddMonths(-1).ToFileTimeUtc()/10;
+                long hour1 = DateTime.Now.AddHours(-1).ToFileTimeUtc()/10;
                 
                 DataSet dataset = new DataSet();
-                SQLiteDataAdapter adapter = new SQLiteDataAdapter("select * from urls where last_visit_time > "+ lastMonth +" order by last_visit_time desc", connection);
+                SQLiteDataAdapter adapter = new SQLiteDataAdapter("select * from urls where last_visit_time > " + hour1 + " order by last_visit_time desc", connection);
                 adapter.Fill(dataset);
                 if (dataset != null && dataset.Tables[0] != null && dataset.Tables.Count > 0)
                 {

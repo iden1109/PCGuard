@@ -16,25 +16,23 @@ namespace com.gseo.persistent.local
     /// </summary>
     public class LocalDB
     {
+        private const string _DB_PREFIX = "LocalDB"; //Local資料庫檔前綴字元
         private string _localDBPath; //DB file path
         private SQLiteConnection _connection;
         private ConcurrencyCache<string> _cache;
         
         //插入瀏覽記錄sql
-        private string _historyInsertSQL = @"insert into history (url, title, browser_type, last_visit_time) 
-                                                values (?,?,?,?);";
+        private string _historyInsertSQL = @"insert into history (url, title, browser_type, last_visit_time) values (?,?,?,?);";
         //查找100筆瀏覽記錄sql
-        private string _historySelectSQL = @"select * from history 
-                                                order by num
-                                                limit 100";
+        private string _historySelectSQL = @"select * from history order by num limit 100;";
         //刪除瀏覽記錄sql
-        private string _historyDeleteSQL = @"delete from history 
-                                                where num <= ?";
+        private string _historyDeleteSQL = @"delete from history where num <= ?;";
 
 
-        public LocalDB() : this("")
+        public LocalDB()
+            : this("")
         {
-            if(_cache == null)
+            if (_cache == null)
                 _cache = ConcurrencyCache<string>.GetInstance();
         }
 
@@ -42,11 +40,11 @@ namespace com.gseo.persistent.local
         {
             if (dbFile != null && !dbFile.Equals(""))
             {
-                this._localDBPath = "PCGuardDB_" + dbFile + ".db";
+                this._localDBPath = _DB_PREFIX + "_" + dbFile + ".db";
             }
             else
             {
-                this._localDBPath = "PCGuardDB.db";
+                this._localDBPath = _DB_PREFIX + ".db";
             }
 
             if (_cache == null)
@@ -72,12 +70,13 @@ namespace com.gseo.persistent.local
         /// <param name="visiTime">最後訪問時間</param>
         public void InsertHistory(string url, string title, BROWSER browserType, DateTime visiTime)
         {
-            //Cache不存在此url才寫入local db
-            if (!_cache.ContainKey(url))
-            {
-                _cache.Add(url, DateTime.Now);
+            long time = visiTime.ToFileTimeUtc() / 10;
 
-                long time = visiTime.ToFileTimeUtc() / 10;
+            //Cache不存在此url才寫入local db
+            //KEY = URL + LastVisitTime
+            if (!_cache.ContainKey(url + time.ToString()))
+            {
+                _cache.Add(url + time.ToString(), DateTime.Now);
 
                 InitConnection();
                 SQLiteCommand command = new SQLiteCommand(_historyInsertSQL, _connection);
@@ -103,12 +102,14 @@ namespace com.gseo.persistent.local
             SQLiteCommand command;
             foreach (URL u in list)
             {
-                //Cache不存在此url才寫入local db
-                if (!_cache.ContainKey(u.URI))
-                {
-                    _cache.Add(u.URI, DateTime.Now);
+                long time = u.VisitedTime.ToFileTimeUtc() / 10;
 
-                    long time = u.VisitedTime.ToFileTimeUtc() / 10;
+                //Cache不存在此url才寫入local db
+                //KEY = URL + LastVisitTime
+                if (!_cache.ContainKey(u.URI + time.ToString()))
+                {
+                    _cache.Add(u.URI + time.ToString(), DateTime.Now);
+                    
                     command = new SQLiteCommand(_historyInsertSQL, _connection);
                     command.Parameters.Add("@url", DbType.String).Value = u.URI;
                     command.Parameters.Add("@title", DbType.String).Value = u.Title;
@@ -116,7 +117,6 @@ namespace com.gseo.persistent.local
                     command.Parameters.Add("@lastVisitTime", DbType.VarNumeric).Value = time;
                     command.ExecuteNonQuery();
                 }
-                
             }
 
             ReleaseConn();
@@ -140,29 +140,19 @@ namespace com.gseo.persistent.local
                 URL u;
                 while (reader.Read())
                 {
-                    switch (reader["browser_type"].ToString())
-                    {
-                        case "IE":
-                            browserType = BROWSER.IE;
-                            break;
-                        case "CHROME":
-                            browserType = BROWSER.CHROME;
-                            break;
-                        case "FIREFOX":
-                            browserType = BROWSER.FIREFOX;
-                            break;
-                    }
-                    long utcMicroSeconds = Convert.ToInt64(reader["last_visit_time"]);
-                    lastVisitTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.FromFileTimeUtc(10 * utcMicroSeconds), TimeZoneInfo.Local);
+                    browserType = (BROWSER) Enum.Parse(typeof (BROWSER), reader["browser_type"].ToString());
+                    lastVisitTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.FromFileTimeUtc(10 * Convert.ToInt64(reader["last_visit_time"])), TimeZoneInfo.Local);
 
                     u = new URL(reader["url"].ToString(), reader["title"].ToString(), browserType, lastVisitTime);
                     u.Num = Convert.ToInt64(reader["num"]);
-                    //Debug.WriteLine("URL: " + reader["url"].ToString() + "\tTitle: " + reader["title"].ToString() + "\tBrowser: " + browserType);
+
                     list.Add(u);
                 }
             }
             catch (SQLiteException ex)
-            { 
+            {
+                if (!ex.ToString().Contains("SQL logic error or missing database"))
+                    Debug.WriteLine(ex.ToString());
             }
             
             ReleaseConn();
@@ -235,6 +225,11 @@ namespace com.gseo.persistent.local
 
         }
 
+        /// <summary>
+        /// 寫入DB前的字元替換，避開不合適字元
+        /// </summary>
+        /// <param name="src">原始字串</param>
+        /// <returns>已替換字串</returns>
         private string Replace(string src)
         {
             if (src != null && !src.Equals(""))
